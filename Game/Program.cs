@@ -110,15 +110,37 @@ namespace Game
             this.position = position;
         }
 
-        public int PosX => (int)position.x;
-        public int PosY => (int)position.y;
+        public int PosX
+        {
+            get { return (int)position.x; }
+        }
+        public int PosY
+        {
+            get { return (int)position.y; }
+        }
 
-        protected int RealWidth => (int)(currentAnimation.CurrentFrame.Width * size.x);
-        protected int RealHeight => (int)(currentAnimation.CurrentFrame.Height * size.y);
+        protected int RealWidth
+        {
+            get { return (int)(currentAnimation.CurrentFrame.Width * size.x); }
+        }
+        protected int RealHeight
+        {
+            get { return (int)(currentAnimation.CurrentFrame.Height * size.y); }
+        }
 
-        public Vector2 Position => position;
-        public Vector2 Size => size;
-        public Vector2 RealSize => new Vector2(RealWidth, RealHeight);
+        public Vector2 Position
+        {
+            get { return position; }
+        }
+
+        public Vector2 Size
+        {
+            get { return size; }
+        }
+        public Vector2 RealSize
+        {
+            get { return new Vector2(RealWidth, RealHeight); }
+        }
 
         public virtual void Draw()
         {
@@ -221,7 +243,7 @@ namespace Game
             rotation = newRotation;
         }
 
-        public void Update()
+        public override void Update()
         {
             base.Update();
 
