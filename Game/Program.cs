@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Reflection;
 
 namespace Game
@@ -58,11 +59,12 @@ namespace Game
         {
             for (int i = 0; i < characterList.Count; i++)
             {
-                var other = characterList[i];
+                Character other = characterList[i];
                 if (IsBoxColliding(player.Position, player.RealSize,
                     other.Position, other.RealSize))
                 {
-                    Console.WriteLine("Alguien esta chocando al Player");
+                    player.Collide(other.Type);
+                    other.Collide(player.Type);
                 }
             }
         }
@@ -96,11 +98,20 @@ namespace Game
 
     }
 
+    public enum CharacterType
+    {
+        Red,
+        Green,
+        Blue,
+        Obstacle
+    }
+
     public class Character
     {
         protected Vector2 size;
         protected Vector2 position;
         protected float rotation;
+        protected CharacterType characterType;
 
         protected Animation currentAnimation;
 
@@ -142,6 +153,13 @@ namespace Game
             get { return new Vector2(RealWidth, RealHeight); }
         }
 
+        public CharacterType Type
+        {
+            get { return characterType; }
+        }
+
+        public virtual void Collide(CharacterType otherType) { }
+
         public virtual void Draw()
         {
             Engine.Draw(currentAnimation.CurrentFrame, position.x, position.y, size.x, size.y, rotation, RealWidth / 2, RealHeight / 2);
@@ -155,6 +173,28 @@ namespace Game
         }
     }
 
+    public class CharacterAnim
+    {
+        private CharacterType characterType;
+        private Animation animation;
+
+        public CharacterAnim(CharacterType characterType, Animation animation)
+        {
+            this.characterType = characterType;
+            this.animation = animation;
+        }
+
+        public CharacterType Type
+        {
+            get { return characterType; }
+        }
+
+        public Animation Anim
+        {
+            get { return animation; }
+        }
+    }
+
     public class Player : Character
     {
         private float speed;
@@ -162,9 +202,9 @@ namespace Game
 
         private Random random;
 
-        private Animation redShip;
-        private Animation greenShip;
-        private Animation blueShip;
+        private CharacterAnim redShip;
+        private CharacterAnim greenShip;
+        private CharacterAnim blueShip;
 
         public Player(Vector2 size, Vector2 position, float speed, float rotationSpeed) : base(size, position)
         {
@@ -183,28 +223,51 @@ namespace Game
             List<Texture> list = new List<Texture>();
 
             list.Add(Engine.GetTexture("Textures/Player/ship_red.png"));
-            redShip = new Animation("redShip", list, .25f, true);
+            redShip = new CharacterAnim(CharacterType.Red, new Animation("redShip", list, .25f, true));
 
             list.Clear();
             list.Add(Engine.GetTexture("Textures/Player/ship_green.png"));
-            greenShip = new Animation("greenShip", list, .25f, true);
+            greenShip = new CharacterAnim(CharacterType.Green, new Animation("greenShip", list, .25f, true));
 
             list.Clear();
             list.Add(Engine.GetTexture("Textures/Player/ship_blue.png"));
-            blueShip = new Animation("blueShip", list, .25f, true);
+            blueShip = new CharacterAnim(CharacterType.Blue, new Animation("blueShip", list, .25f, true));
 
-            currentAnimation = SelectRandomAnimation();
+            ChangeColor();
         }
 
-        private Animation SelectRandomAnimation()
+        private void ChangeColor()
         {
-            List<Animation> tempList = new List<Animation>();
+            CharacterAnim selectedAnim = SelectRandomAnimation();
+            currentAnimation = selectedAnim.Anim;
+            characterType = selectedAnim.Type;
+        }
+
+        private CharacterAnim SelectRandomAnimation()
+        {
+            List<CharacterAnim> tempList = new List<CharacterAnim>();
             tempList.Add(redShip);
             tempList.Add(greenShip);
             tempList.Add(blueShip);
 
             int randomIndex = random.Next(0, tempList.Count);
             return tempList[randomIndex];
+        }
+
+        public override void Collide(CharacterType otherType)
+        {
+            base.Collide(otherType);
+
+            if (otherType == characterType)
+            {
+                Console.WriteLine("Player Collided Current Color");
+
+            }
+
+            if (otherType == CharacterType.Obstacle)
+            {
+                Console.WriteLine("Player Collided an Obstacle");
+            }
         }
 
         private Vector2 CalculateUpVector(float rotation)
@@ -329,7 +392,5 @@ namespace Game
 
             Engine.Show();
         }
-
-       
     }
 }
