@@ -28,6 +28,11 @@ namespace Game
             characterList.Add(character);
         }
 
+        public void RemoveUpdatableObj(Character character)
+        {
+            characterList.Remove(character);
+        }
+
         public void Input()
         { 
             player.Input();
@@ -47,12 +52,12 @@ namespace Game
 
         public void Render()
         {
-            player.Draw();
-
             foreach (var character in characterList)
             {
                 character.Draw();
             }
+
+            player.Draw();
         }
 
         private void CheckCollisions()
@@ -63,8 +68,11 @@ namespace Game
                 if (IsBoxColliding(player.Position, player.RealSize,
                     other.Position, other.RealSize))
                 {
-                    player.Collide(other.Type);
-                    other.Collide(player.Type);
+                    CharacterType playerType = player.Type;
+                    CharacterType otherType = other.Type;
+
+                    player.Collide(otherType);
+                    other.Collide(playerType);
                 }
             }
         }
@@ -200,8 +208,6 @@ namespace Game
         private float speed;
         private float rotationSpeed;
 
-        private Random random;
-
         private CharacterAnim redShip;
         private CharacterAnim greenShip;
         private CharacterAnim blueShip;
@@ -211,8 +217,6 @@ namespace Game
             this.rotationSpeed = rotationSpeed;
             this.speed = speed;
 
-            random = new Random();
-
             AddAnimations();
 
             GameUpdateManager.Instance.AddPlayer(this);
@@ -220,18 +224,17 @@ namespace Game
 
         private void AddAnimations()
         {
-            List<Texture> list = new List<Texture>();
+            List<Texture> listRed = new List<Texture>();
+            listRed.Add(Engine.GetTexture("Textures/Player/ship_red.png"));
+            redShip = new CharacterAnim(CharacterType.Red, new Animation("redShip", listRed, .25f, true));
 
-            list.Add(Engine.GetTexture("Textures/Player/ship_red.png"));
-            redShip = new CharacterAnim(CharacterType.Red, new Animation("redShip", list, .25f, true));
+            List<Texture> listGreen = new List<Texture>();
+            listGreen.Add(Engine.GetTexture("Textures/Player/ship_green.png"));
+            greenShip = new CharacterAnim(CharacterType.Green, new Animation("greenShip", listGreen, .25f, true));
 
-            list.Clear();
-            list.Add(Engine.GetTexture("Textures/Player/ship_green.png"));
-            greenShip = new CharacterAnim(CharacterType.Green, new Animation("greenShip", list, .25f, true));
-
-            list.Clear();
-            list.Add(Engine.GetTexture("Textures/Player/ship_blue.png"));
-            blueShip = new CharacterAnim(CharacterType.Blue, new Animation("blueShip", list, .25f, true));
+            List<Texture> listBlue = new List<Texture>();
+            listBlue.Add(Engine.GetTexture("Textures/Player/ship_blue.png"));
+            blueShip = new CharacterAnim(CharacterType.Blue, new Animation("blueShip", listBlue, .25f, true));
 
             ChangeColor();
         }
@@ -250,7 +253,7 @@ namespace Game
             tempList.Add(greenShip);
             tempList.Add(blueShip);
 
-            int randomIndex = random.Next(0, tempList.Count);
+            int randomIndex = Program.random.Next(0, tempList.Count);
             return tempList[randomIndex];
         }
 
@@ -260,8 +263,7 @@ namespace Game
 
             if (otherType == characterType)
             {
-                Console.WriteLine("Player Collided Current Color");
-
+                ChangeColor();
             }
 
             if (otherType == CharacterType.Obstacle)
@@ -343,6 +345,88 @@ namespace Game
         }
     }
 
+    public class Timer : Character
+    {
+        private float lifeTime;
+        private int minLifeTime;
+        private int maxLifeTime;
+        private float currentTime;
+
+        private CharacterAnim redTimer;
+        private CharacterAnim greenTimer;
+        private CharacterAnim blueTimer;
+
+        public Timer(Vector2 size, Vector2 position, int minLifeTime, int maxLifeTime) : base(size, position)
+        {
+            this.minLifeTime = minLifeTime;
+            this.maxLifeTime = maxLifeTime;
+
+            AddAnimations();
+
+            GameUpdateManager.Instance.AddUpdatableObj(this);
+        }
+
+        private void AddAnimations()
+        {
+            List<Texture> listRed = new List<Texture>();
+            listRed.Add(Engine.GetTexture("Textures/Timer/timer_red.png"));
+            redTimer = new CharacterAnim(CharacterType.Red, new Animation("redTimer", listRed, .25f, true));
+
+            List<Texture> listGreen = new List<Texture>();
+            listGreen.Add(Engine.GetTexture("Textures/Timer/timer_green.png"));
+            greenTimer = new CharacterAnim(CharacterType.Green, new Animation("greenTimer", listGreen, .25f, true));
+
+            List<Texture> listBlue = new List<Texture>();
+            listBlue.Add(Engine.GetTexture("Textures/Timer/timer_blue.png"));
+            blueTimer = new CharacterAnim(CharacterType.Blue, new Animation("blueTimer", listBlue, .25f, true));
+
+            Generate();
+        }
+
+        private void Generate()
+        {
+            CharacterAnim selectedAnim = SelectRandomAnimation();
+            currentAnimation = selectedAnim.Anim;
+            characterType = selectedAnim.Type;
+            position.x = Program.random.Next(0, Program.WIDTH);
+            position.y = Program.random.Next(0, Program.HEIGHT);
+            lifeTime = Program.random.Next(minLifeTime, maxLifeTime);
+            currentTime = 0;
+        }
+
+        private CharacterAnim SelectRandomAnimation()
+        {
+            List<CharacterAnim> tempList = new List<CharacterAnim>();
+            tempList.Add(redTimer);
+            tempList.Add(greenTimer);
+            tempList.Add(blueTimer);
+
+            int randomIndex = Program.random.Next(0, tempList.Count);
+            return tempList[randomIndex];
+        }
+
+        public override void Collide(CharacterType otherType)
+        {
+            base.Collide(otherType);
+
+            if (otherType == characterType)
+            {
+                Generate();
+            }
+        }
+
+        public override void Update()
+        {
+            base.Update();
+            currentTime += Program.deltaTime;
+
+            if (currentTime >= lifeTime)
+            {
+                Generate();
+            }
+        }
+    }
+
     public class Program
     {
         public static float deltaTime = 0;
@@ -351,11 +435,18 @@ namespace Game
         public static int WIDTH = 800;
         public static int HEIGHT = 600;
 
+        public static Random random = new Random();
+
         static void Main(string[] args)
         {
             Engine.Initialize("My Game" , WIDTH, HEIGHT);
 
             Player p = new Player(new Vector2(1, 1), new Vector2(WIDTH / 2, HEIGHT / 2), 5, 5);
+
+            for (int i = 0; i < 10; i++)
+            {
+                Timer t = new Timer(new Vector2(1, 1), new Vector2(200, HEIGHT / 2), 5, 7);
+            }
 
             while (true)
             {   
