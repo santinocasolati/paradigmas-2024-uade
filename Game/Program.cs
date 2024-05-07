@@ -16,7 +16,19 @@ namespace Game
         private Player player;
         private List<Character> characterList = new List<Character>();
 
-        public GameUpdateManager() { }
+        private GameTimer gameTimer;
+        private bool gameInProgress = false;
+
+        public GameUpdateManager()
+        {
+            gameTimer = new GameTimer(20);
+            gameInProgress = true;
+        }
+
+        public void AddTime(float timeToAdd)
+        {
+            gameTimer.AddTime(timeToAdd);
+        }
 
         public void AddPlayer(Player player)
         {
@@ -34,13 +46,17 @@ namespace Game
         }
 
         public void Input()
-        { 
-            player.Input();
+        {
+            if (!gameInProgress) return;
+
+            player?.Input();
         }
 
         public void Update() 
         {
-            player.Update();
+            if (!gameInProgress) return;
+
+            player?.Update();
 
             foreach (var character in characterList)
             {
@@ -48,16 +64,27 @@ namespace Game
             }
 
             CheckCollisions();
+
+            float timeLeft = gameTimer.UpdateTime(Program.deltaTime);
+
+            if (timeLeft <= 0)
+            {
+                gameInProgress = false;
+            }
         }
 
         public void Render()
         {
+            if (!gameInProgress) return;
+
+            gameTimer.Draw();
+
             foreach (var character in characterList)
             {
                 character.Draw();
             }
 
-            player.Draw();
+            player?.Draw();
         }
 
         private void CheckCollisions()
@@ -104,6 +131,32 @@ namespace Game
             return distanceX <= sumHalfWidths && distanceY <= sumHalfHeights;
         }
 
+    }
+
+    public class GameTimer
+    {
+        private float currentTime;
+
+        public GameTimer(float currentTime)
+        {
+            this.currentTime = currentTime;
+        }
+
+        public void AddTime(float timeToAdd)
+        {
+            currentTime += timeToAdd;
+        }
+
+        public float UpdateTime(float deltaTime)
+        {
+            currentTime -= deltaTime;
+            return currentTime;
+        }
+
+        public void Draw()
+        {
+            Console.WriteLine((int)currentTime);
+        }
     }
 
     public enum CharacterType
@@ -263,7 +316,12 @@ namespace Game
 
             if (otherType == characterType)
             {
-                ChangeColor();
+                CharacterType currentColor = characterType;
+
+                while (currentColor == characterType)
+                {
+                    ChangeColor();
+                }
             }
 
             if (otherType == CharacterType.Obstacle)
@@ -412,6 +470,7 @@ namespace Game
             if (otherType == characterType)
             {
                 Generate();
+                GameUpdateManager.Instance.AddTime(5);
             }
         }
 
