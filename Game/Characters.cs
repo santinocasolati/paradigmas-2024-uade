@@ -14,7 +14,7 @@ namespace Game
         Obstacle
     }
 
-    public class Character
+    public class Character : ICollidable, IDrawable, IHasAnimations
     {
         protected Vector2 size;
         protected Vector2 position;
@@ -66,6 +66,8 @@ namespace Game
             get { return characterType; }
         }
 
+        public virtual void AddAnimations() { }
+
         public virtual void Collide(CharacterType otherType) { }
 
         public virtual void Draw()
@@ -73,14 +75,13 @@ namespace Game
             Engine.Draw(currentAnimation.CurrentFrame, position.x, position.y, size.x, size.y, rotation, RealWidth / 2, RealHeight / 2);
         }
 
-        public virtual void Input() { }
-
-        public virtual void Update()
+        public virtual void Update(float deltaTime)
         {
             currentAnimation.Update();
         }
     }
 
+    //Composicion. Animation tambien es composicion
     public class CharacterAnim
     {
         private CharacterType characterType;
@@ -103,7 +104,7 @@ namespace Game
         }
     }
 
-    public class Player : Character
+    public class Player : Character, IRecievesInput
     {
         private float speed;
         private float rotationSpeed;
@@ -122,7 +123,7 @@ namespace Game
             GameUpdateManager.Instance.AddPlayer(this);
         }
 
-        private void AddAnimations()
+        public override void AddAnimations()
         {
             List<Texture> listRed = new List<Texture>();
             listRed.Add(Engine.GetTexture("Textures/Player/ship_red.png"));
@@ -194,10 +195,8 @@ namespace Game
             return currentUpVector;
         }
 
-        public override void Input()
+        public void Input()
         {
-            base.Input();
-
             float newRotation = rotation;
 
             if (Engine.GetKey(Keys.A))
@@ -213,19 +212,19 @@ namespace Game
             rotation = newRotation;
         }
 
-        public override void Update()
+        public override void Update(float deltaTime)
         {
-            base.Update();
+            base.Update(deltaTime);
 
             CheckBorders();
-            AddSpeed();
+            AddSpeed(deltaTime);
         }
 
-        private void AddSpeed()
+        private void AddSpeed(float deltaTime)
         {
             Vector2 upVector = CalculateUpVector(rotation);
             upVector.ScaleVector(speed);
-            upVector.ScaleVector(Program.deltaTime);
+            upVector.ScaleVector(deltaTime);
             position.x += upVector.x;
             position.y += upVector.y;
         }
@@ -273,7 +272,7 @@ namespace Game
             GameUpdateManager.Instance.AddUpdatableObj(this);
         }
 
-        private void AddAnimations()
+        public override void AddAnimations()
         {
             List<Texture> listRed = new List<Texture>();
             listRed.Add(Engine.GetTexture("Textures/Timer/timer_red.png"));
@@ -323,10 +322,10 @@ namespace Game
             }
         }
 
-        public override void Update()
+        public override void Update(float deltaTime)
         {
-            base.Update();
-            currentTime += Program.deltaTime;
+            base.Update(deltaTime);
+            currentTime += deltaTime;
 
             if (currentTime >= lifeTime)
             {

@@ -20,7 +20,7 @@ namespace Game
 
         public GameUpdateManager()
         {
-            gameTimer = new GameTimer(10);
+            gameTimer = new GameTimer(10, 50);
             gameInProgress = true;
         }
 
@@ -51,22 +51,22 @@ namespace Game
             player?.Input();
         }
 
-        public void Update() 
+        public void Update(float deltaTime) 
         {
             if (!gameInProgress) return;
 
-            player?.Update();
+            player?.Update(deltaTime);
 
-            foreach (var character in characterList)
+            foreach (Character character in characterList)
             {
-                character.Update();
+                character.Update(deltaTime);
             }
 
             CheckCollisions();
 
-            float timeLeft = gameTimer.UpdateTime(Program.deltaTime);
+            gameTimer.Update(deltaTime);
 
-            if (timeLeft <= 0)
+            if (gameTimer.CurrentTime <= 0)
             {
                 gameInProgress = false;
             }
@@ -78,7 +78,7 @@ namespace Game
 
             gameTimer.Draw();
 
-            foreach (var character in characterList)
+            foreach (Character character in characterList)
             {
                 character.Draw();
             }
@@ -132,32 +132,6 @@ namespace Game
 
     }
 
-    public class GameTimer
-    {
-        private float currentTime;
-
-        public GameTimer(float currentTime)
-        {
-            this.currentTime = currentTime;
-        }
-
-        public void AddTime(float timeToAdd)
-        {
-            currentTime += timeToAdd;
-        }
-
-        public float UpdateTime(float deltaTime)
-        {
-            currentTime -= deltaTime;
-            return currentTime;
-        }
-
-        public void Draw()
-        {
-            Console.WriteLine((int)currentTime);
-        }
-    }
-
     public class Program
     {
         public static float deltaTime = 0;
@@ -203,7 +177,7 @@ namespace Game
 
         static void Update()
         {
-            GameUpdateManager.Instance.Update();
+            GameUpdateManager.Instance.Update(deltaTime);
         }
 
         static void Render()
