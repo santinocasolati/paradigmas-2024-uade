@@ -119,8 +119,6 @@ namespace Game
             this.speed = speed;
 
             AddAnimations();
-
-            GameUpdateManager.Instance.AddPlayer(this);
         }
 
         public override void AddAnimations()
@@ -268,8 +266,6 @@ namespace Game
             this.maxLifeTime = maxLifeTime;
 
             AddAnimations();
-
-            GameUpdateManager.Instance.AddUpdatableObj(this);
         }
 
         public override void AddAnimations()
@@ -315,12 +311,13 @@ namespace Game
         {
             base.Collide(otherType);
 
+            // TODO Fix this
             if (otherType == characterType)
             {
-                GameUpdateManager.Instance.AddTime(2);
+                GameUpdater.Instance.AddTime(2);
             } else
             {
-                GameUpdateManager.Instance.RemoveTime(2);
+                GameUpdater.Instance.RemoveTime(2);
             }
 
             Generate();

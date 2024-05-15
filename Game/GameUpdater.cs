@@ -6,29 +6,15 @@ using System.Threading.Tasks;
 
 namespace Game
 {
-    public class GameUpdateManager
+    public class GameUpdater
     {
-        private static GameUpdateManager instance;
-        public static GameUpdateManager Instance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    instance = new GameUpdateManager();
-                }
-
-                return instance;
-            }
-        }
-
         private Player player;
         private List<Character> characterList = new List<Character>();
 
         private GameTimer gameTimer;
         private bool gameInProgress = false;
 
-        public GameUpdateManager()
+        public GameUpdater()
         {
             gameTimer = new GameTimer(25, 50);
             gameInProgress = true;

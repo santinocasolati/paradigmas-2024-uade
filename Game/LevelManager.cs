@@ -6,18 +6,23 @@ using System.Threading.Tasks;
 
 namespace Game
 {
+    public enum LevelType
+    {
+        Menu,
+        Gameplay,
+        Win,
+        Lose
+    }
+
     public class LevelManager
     {
         private static LevelManager instance = new LevelManager();
 
-        private Dictionary<string, Level> levels = new Dictionary<string, Level>();
         private Level currentLevel = null;
 
         public LevelManager()
         {
-            GameLevel gameLevel = new GameLevel();
-            AddNewLevel("game", gameLevel);
-            SetLevel("game");
+            SetLevel(LevelType.Gameplay);
         }
 
         public static LevelManager Instance
@@ -36,21 +41,22 @@ namespace Game
             }
         }
 
-        public void SetLevel(string levelName)
+        public void SetLevel(LevelType levelType)
         {
-            if (levels.TryGetValue(levelName, out var l_currentLevel))
+            switch (levelType)
             {
-                l_currentLevel.Reset();
-                currentLevel = l_currentLevel;
-            } else
-            {
-                Console.WriteLine($"Level {levelName} has not been found");
+                case LevelType.Menu:
+                    break;
+                case LevelType.Gameplay:
+                    currentLevel = new GameplayLevel();
+                    break;
+                case LevelType.Win:
+                    break;
+                case LevelType.Lose:
+                    break;
+                default:
+                    break;
             }
-        }
-
-        public void AddNewLevel(string levelName, Level level)
-        {
-            levels.Add(levelName, level);
         }
     }
 }
