@@ -14,7 +14,7 @@ namespace Game
         private Animation clockAnim;
         private Animation handAnim;
 
-        private float scale = .5f;
+        private float scale = .125f;
         private float handRotation = 0;
 
         private int RealWidthClock
@@ -61,6 +61,17 @@ namespace Game
             currentTime += timeToAdd;
         }
 
+        public void SetTime(float currentTime, float maxTime)
+        {
+            this.currentTime = currentTime;
+            this.maxTime = maxTime;
+        }
+
+        public void RemoveTime(float timeToRemove)
+        {
+            currentTime -= timeToRemove;
+        }
+
         public void Update(float deltaTime)
         {
             currentTime -= deltaTime;
@@ -74,8 +85,8 @@ namespace Game
 
         public void Draw()
         {
-            Engine.Draw(clockAnim.CurrentFrame, Program.WIDTH / 2, Program.HEIGHT / 2, scale, scale, 0, RealWidthClock / 2, RealHeightClock / 2);
-            Engine.Draw(handAnim.CurrentFrame, Program.WIDTH / 2, Program.HEIGHT / 2, scale, scale, handRotation, RealWidthHand / 2, RealHeightHand / 2);
+            Engine.Draw(clockAnim.CurrentFrame, 50, 50, scale, scale, 0, RealWidthClock / 2, RealHeightClock / 2);
+            Engine.Draw(handAnim.CurrentFrame, 50, 50, scale, scale, handRotation, RealWidthHand / 2, RealHeightHand / 2);
         }
     }
 }

@@ -317,9 +317,13 @@ namespace Game
 
             if (otherType == characterType)
             {
-                Generate();
                 GameUpdateManager.Instance.AddTime(2);
+            } else
+            {
+                GameUpdateManager.Instance.RemoveTime(2);
             }
+
+            Generate();
         }
 
         public override void Update(float deltaTime)
