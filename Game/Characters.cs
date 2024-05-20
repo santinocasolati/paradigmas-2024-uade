@@ -124,16 +124,20 @@ namespace Game
         public override void AddAnimations()
         {
             List<Texture> listRed = new List<Texture>();
-            listRed.Add(Engine.GetTexture("Textures/Player/ship_red.png"));
-            redShip = new CharacterAnim(CharacterType.Red, new Animation("redShip", listRed, .25f, true));
-
             List<Texture> listGreen = new List<Texture>();
-            listGreen.Add(Engine.GetTexture("Textures/Player/ship_green.png"));
-            greenShip = new CharacterAnim(CharacterType.Green, new Animation("greenShip", listGreen, .25f, true));
-
             List<Texture> listBlue = new List<Texture>();
-            listBlue.Add(Engine.GetTexture("Textures/Player/ship_blue.png"));
-            blueShip = new CharacterAnim(CharacterType.Blue, new Animation("blueShip", listBlue, .25f, true));
+
+            for (int i = 0; i < 6; i++)
+            {
+                listRed.Add(Engine.GetTexture($"Textures/Player/Red/0{i + 1}.png"));
+                listGreen.Add(Engine.GetTexture($"Textures/Player/Green/0{i + 1}.png"));
+                listBlue.Add(Engine.GetTexture($"Textures/Player/Blue/0{i + 1}.png"));
+            }
+
+            
+            redShip = new CharacterAnim(CharacterType.Red, new Animation("redShip", listRed, .5f, true));
+            greenShip = new CharacterAnim(CharacterType.Green, new Animation("greenShip", listGreen, .5f, true));
+            blueShip = new CharacterAnim(CharacterType.Blue, new Animation("blueShip", listBlue, .5f, true));
 
             ChangeColor();
         }
@@ -311,16 +315,21 @@ namespace Game
         {
             base.Collide(otherType);
 
-            // TODO Fix this
-            if (otherType == characterType)
-            {
-                GameUpdater.Instance.AddTime(2);
-            } else
-            {
-                GameUpdater.Instance.RemoveTime(2);
-            }
+            GameplayLevel castedLevel = LevelManager.Instance.CurrentLevel as GameplayLevel;
 
-            Generate();
+            if (castedLevel != null )
+            {
+                if (otherType == characterType)
+                {
+                    castedLevel.AddTime(2);
+                }
+                else
+                {
+                    castedLevel.RemoveTime(2);
+                }
+
+                Generate();
+            }
         }
 
         public override void Update(float deltaTime)

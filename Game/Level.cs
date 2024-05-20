@@ -27,7 +27,7 @@ namespace Game
         {
             gameUpdater = new GameUpdater();
 
-            Player p = new Player(new Vector2(1, 1), new Vector2(Program.WIDTH / 2, Program.HEIGHT / 2), 500, 500);
+            Player p = new Player(new Vector2(.5f, .5f), new Vector2(Program.WIDTH / 2, Program.HEIGHT / 2), 500, 500);
             gameUpdater.AddPlayer(p);
 
             for (int i = 0; i < 10; i++)
@@ -51,6 +51,16 @@ namespace Game
         public override void Update(float deltaTime)
         {
             gameUpdater.Update(deltaTime);
+        }
+
+        public void AddTime(float amount)
+        {
+            gameUpdater.AddTime(amount);
+        }
+
+        public void RemoveTime(float amount)
+        {
+            gameUpdater.RemoveTime(amount);
         }
     }
 }
