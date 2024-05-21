@@ -29,6 +29,11 @@ namespace Game
             }
         }
 
+        public void Reset()
+        {
+            gameTimer.SetTime(startingTime, timeToWin);
+        }
+
         public void AddTime(float timeToAdd)
         {
             gameTimer.AddTime(timeToAdd);
