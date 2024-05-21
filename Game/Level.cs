@@ -20,7 +20,8 @@ namespace Game
 
     public class GameplayLevel : UpdatableLevel
     {
-        private GameUpdater gameUpdater;
+        private Player player;
+        private List<Character> characterList = new List<Character>();
 
         public GameplayLevel()
         {
@@ -29,32 +30,75 @@ namespace Game
 
         protected override void CreateLevel()
         {
-            gameUpdater = new GameUpdater();
-
-            Player p = new Player(new Vector2(.5f, .5f), new Vector2(Program.WIDTH / 2, Program.HEIGHT / 2), 500, 500);
-            gameUpdater.AddPlayer(p);
+            player = new Player(new Vector2(.5f, .5f), new Vector2(Program.WIDTH / 2, Program.HEIGHT / 2), 500, 500);
 
             for (int i = 0; i < 10; i++)
             {
                 Timer t = new Timer(new Vector2(1, 1), new Vector2(200, Program.HEIGHT / 2), 5, 7);
-                gameUpdater.AddUpdatableObj(t);
+                characterList.Add(t);
             }
         }
 
         public override void Input()
         {
-            gameUpdater.Input();
+            player?.Input();
         }
 
         public override void Render()
         {
             Engine.Draw("Textures/Backgrounds/stars_bg.jpg", 0, 0, .25f, .25f, 0, 0, 0);
-            gameUpdater.Render();
+            GameManager.Instance.DrawTimer();
+
+            foreach (Character character in characterList)
+            {
+                character.Draw();
+            }
+
+            player?.Draw();
         }
 
         public override void Update(float deltaTime)
         {
-            gameUpdater.Update(deltaTime);
+            player?.Update(deltaTime);
+
+            foreach (Character character in characterList)
+            {
+                character.Update(deltaTime);
+            }
+
+            CheckCollisions();
+
+            GameManager.Instance.UpdateTimer(deltaTime);
+        }
+
+        private void CheckCollisions()
+        {
+            for (int i = 0; i < characterList.Count; i++)
+            {
+                Character other = characterList[i];
+                if (IsBoxColliding(player.Position, player.RealSize,
+                    other.Position, other.RealSize))
+                {
+                    CharacterType playerType = player.Type;
+                    CharacterType otherType = other.Type;
+
+                    player.Collide(otherType);
+                    other.Collide(playerType);
+                }
+            }
+        }
+
+        private bool IsBoxColliding(Vector2 posOne, Vector2 realSizeOne,
+        Vector2 posTwo, Vector2 RealSizeTwo)
+        {
+
+            float distanceX = Math.Abs(posOne.x - posTwo.x);
+            float distanceY = Math.Abs(posOne.y - posTwo.y);
+
+            float sumHalfWidths = realSizeOne.x / 2 + RealSizeTwo.x / 2;
+            float sumHalfHeights = realSizeOne.y / 2 + RealSizeTwo.y / 2;
+
+            return distanceX <= sumHalfWidths && distanceY <= sumHalfHeights;
         }
     }
 

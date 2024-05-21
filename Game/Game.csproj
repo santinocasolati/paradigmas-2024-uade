@@ -52,7 +52,6 @@
     <Compile Include="Game.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
-    <Compile Include="GameUpdater.cs" />
     <Compile Include="Interfaces.cs" />
     <Compile Include="Level.cs" />
     <Compile Include="LevelManager.cs" />
