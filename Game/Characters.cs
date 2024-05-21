@@ -81,7 +81,6 @@ namespace Game
         }
     }
 
-    //Composicion. Animation tambien es composicion
     public class CharacterAnim
     {
         private CharacterType characterType;

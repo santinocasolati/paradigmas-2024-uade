@@ -18,7 +18,7 @@ namespace Game
             GameManager.Instance.Reset();
         }
 
-        public void AddPlayer(Player player)
+        public void SetPlayer(Player player)
         {
             this.player = player;
         }

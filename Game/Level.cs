@@ -32,7 +32,7 @@ namespace Game
             gameUpdater = new GameUpdater();
 
             Player p = new Player(new Vector2(.5f, .5f), new Vector2(Program.WIDTH / 2, Program.HEIGHT / 2), 500, 500);
-            gameUpdater.AddPlayer(p);
+            gameUpdater.SetPlayer(p);
 
             for (int i = 0; i < 10; i++)
             {
