@@ -134,7 +134,7 @@ namespace Game
                 listBlue.Add(Engine.GetTexture($"Textures/Player/Blue/0{i + 1}.png"));
             }
 
-            
+
             redShip = new CharacterAnim(CharacterType.Red, new Animation("redShip", listRed, .5f, true));
             greenShip = new CharacterAnim(CharacterType.Green, new Animation("greenShip", listGreen, .5f, true));
             blueShip = new CharacterAnim(CharacterType.Blue, new Animation("blueShip", listBlue, .5f, true));
@@ -315,21 +315,16 @@ namespace Game
         {
             base.Collide(otherType);
 
-            GameplayLevel castedLevel = LevelManager.Instance.CurrentLevel as GameplayLevel;
-
-            if (castedLevel != null )
+            if (otherType == characterType)
             {
-                if (otherType == characterType)
-                {
-                    castedLevel.AddTime(2);
-                }
-                else
-                {
-                    castedLevel.RemoveTime(2);
-                }
-
-                Generate();
+                GameManager.Instance.AddTime(5);
             }
+            else
+            {
+                GameManager.Instance.RemoveTime(5);
+            }
+
+            Generate();
         }
 
         public override void Update(float deltaTime)

@@ -52,8 +52,10 @@ namespace Game
                     currentLevel = new GameplayLevel();
                     break;
                 case LevelType.Win:
+                    currentLevel = new WinLevel();
                     break;
                 case LevelType.Lose:
+                    currentLevel = new GameOverLevel();
                     break;
                 default:
                     break;

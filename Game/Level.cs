@@ -56,16 +56,6 @@ namespace Game
         {
             gameUpdater.Update(deltaTime);
         }
-
-        public void AddTime(float amount)
-        {
-            gameUpdater.AddTime(amount);
-        }
-
-        public void RemoveTime(float amount)
-        {
-            gameUpdater.RemoveTime(amount);
-        }
     }
 
     public class MenuLevel : Level

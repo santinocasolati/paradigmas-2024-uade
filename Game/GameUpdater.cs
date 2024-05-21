@@ -11,30 +11,11 @@ namespace Game
         private Player player;
         private List<Character> characterList = new List<Character>();
 
-        private GameTimer gameTimer;
-        private bool gameInProgress = false;
-
-        public GameUpdater()
-        {
-            gameTimer = new GameTimer(25, 50);
-            gameInProgress = true;
-        }
-
         public void Reset()
         {
             player = null;
             characterList.Clear();
-            gameTimer.SetTime(10, 50);
-        }
-
-        public void AddTime(float timeToAdd)
-        {
-            gameTimer.AddTime(timeToAdd);
-        }
-
-        public void RemoveTime(float timeToRemove)
-        {
-            gameTimer.RemoveTime(timeToRemove);
+            GameManager.Instance.Reset();
         }
 
         public void AddPlayer(Player player)
@@ -54,15 +35,11 @@ namespace Game
 
         public void Input()
         {
-            if (!gameInProgress) return;
-
             player?.Input();
         }
 
         public void Update(float deltaTime)
         {
-            if (!gameInProgress) return;
-
             player?.Update(deltaTime);
 
             foreach (Character character in characterList)
@@ -72,19 +49,12 @@ namespace Game
 
             CheckCollisions();
 
-            gameTimer?.Update(deltaTime);
-
-            if (gameTimer != null && gameTimer.CurrentTime <= 0)
-            {
-                gameInProgress = false;
-            }
+            GameManager.Instance.UpdateTimer(deltaTime);
         }
 
         public void Render()
         {
-            if (!gameInProgress) return;
-
-            gameTimer?.Draw();
+            GameManager.Instance.DrawTimer();
 
             foreach (Character character in characterList)
             {
