@@ -66,6 +66,9 @@
     <Content Include="Engine.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Textures\Backgrounds\main_menu.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Textures\Backgrounds\stars_bg.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

@@ -22,7 +22,7 @@ namespace Game
 
         public LevelManager()
         {
-            SetLevel(LevelType.Gameplay);
+            SetLevel(LevelType.Menu);
         }
 
         public static LevelManager Instance
@@ -46,6 +46,7 @@ namespace Game
             switch (levelType)
             {
                 case LevelType.Menu:
+                    currentLevel = new MenuLevel();
                     break;
                 case LevelType.Gameplay:
                     currentLevel = new GameplayLevel();

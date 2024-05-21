@@ -10,11 +10,15 @@ namespace Game
     {
         public abstract void Input();
         public abstract void Render();
+    }
+
+    public abstract class UpdatableLevel : Level
+    {
         public abstract void Update(float deltaTime);
         protected abstract void CreateLevel();
     }
 
-    public class GameplayLevel : Level
+    public class GameplayLevel : UpdatableLevel
     {
         private GameUpdater gameUpdater;
 
@@ -61,6 +65,54 @@ namespace Game
         public void RemoveTime(float amount)
         {
             gameUpdater.RemoveTime(amount);
+        }
+    }
+
+    public class MenuLevel : Level
+    {
+        public override void Input()
+        {
+            if (Engine.GetKey(Keys.SPACE))
+            {
+                LevelManager.Instance.SetLevel(LevelType.Gameplay);
+            }
+        }
+
+        public override void Render()
+        {
+            Engine.Draw("Textures/Backgrounds/main_menu.png", 0, 0, 1, 1, 0, 0, 0);
+        }
+    }
+
+    public class WinLevel : Level
+    {
+        public override void Input()
+        {
+            if (Engine.GetKey(Keys.SPACE))
+            {
+                LevelManager.Instance.SetLevel(LevelType.Menu);
+            }
+        }
+
+        public override void Render()
+        {
+            Engine.Draw("Textures/Backgrounds/win.png", 0, 0, 1, 1, 0, 0, 0);
+        }
+    }
+
+    public class GameOverLevel : Level
+    {
+        public override void Input()
+        {
+            if (Engine.GetKey(Keys.SPACE))
+            {
+                LevelManager.Instance.SetLevel(LevelType.Menu);
+            }
+        }
+
+        public override void Render()
+        {
+            Engine.Draw("Textures/Backgrounds/game_over.png", 0, 0, 1, 1, 0, 0, 0);
         }
     }
 }

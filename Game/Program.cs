@@ -45,7 +45,15 @@ namespace Game
 
         static void Update()
         {
-            LevelManager.Instance.CurrentLevel?.Update(deltaTime);
+            if (LevelManager.Instance.CurrentLevel != null)
+            {
+                UpdatableLevel castedLevel = LevelManager.Instance.CurrentLevel as UpdatableLevel;
+
+                if (castedLevel != null)
+                {
+                    castedLevel.Update(deltaTime);
+                }
+            }
         }
 
         static void Render()
