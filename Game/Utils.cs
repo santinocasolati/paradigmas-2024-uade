@@ -8,24 +8,43 @@ namespace Game
 {
     public struct Vector2
     {
-        public float x { get; set; }
-        public float y { get; set; }
+        private float x;
+        private float y;
 
-        public Vector2(float x, float y)
+        public Vector2(float x, float y) : this()
         {
-            this.x = x;
-            this.y = y;
+            X = x;
+            Y = y;
+        }
+
+        public float X
+        {
+            get
+            {
+                return x;
+            }
+            set
+            {
+                x = value;
+            }
+        }
+
+        public float Y
+        {
+            get
+            {
+                return y;
+            }
+            set
+            {
+                y = value;
+            }
         }
 
         public void ScaleVector(float scale)
         {
-            x *= scale;
-            y *= scale;
+            X *= scale;
+            Y *= scale;
         }
-    }
-    public class Utils
-    {
-
-      
     }
 }

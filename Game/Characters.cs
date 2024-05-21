@@ -31,20 +31,20 @@ namespace Game
 
         public int PosX
         {
-            get { return (int)position.x; }
+            get { return (int)position.X; }
         }
         public int PosY
         {
-            get { return (int)position.y; }
+            get { return (int)position.Y; }
         }
 
         protected int RealWidth
         {
-            get { return (int)(currentAnimation.CurrentFrame.Width * size.x); }
+            get { return (int)(currentAnimation.CurrentFrame.Width * size.X); }
         }
         protected int RealHeight
         {
-            get { return (int)(currentAnimation.CurrentFrame.Height * size.y); }
+            get { return (int)(currentAnimation.CurrentFrame.Height * size.Y); }
         }
 
         public Vector2 Position
@@ -72,7 +72,7 @@ namespace Game
 
         public virtual void Draw()
         {
-            Engine.Draw(currentAnimation.CurrentFrame, position.x, position.y, size.x, size.y, rotation, RealWidth / 2, RealHeight / 2);
+            Engine.Draw(currentAnimation.CurrentFrame, position.X, position.Y, size.X, size.Y, rotation, RealWidth / 2, RealHeight / 2);
         }
 
         public virtual void Update(float deltaTime)
@@ -184,15 +184,15 @@ namespace Game
             double rotationRadians = Math.PI * rotation / 180;
 
             Vector2 defaultUpVector = new Vector2();
-            defaultUpVector.x = 0;
-            defaultUpVector.y = 1;
+            defaultUpVector.X = 0;
+            defaultUpVector.Y = 1;
 
             float cosTheta = (float)Math.Cos(rotationRadians);
             float sinTheta = (float)Math.Sin(rotationRadians);
 
             Vector2 currentUpVector = new Vector2();
-            currentUpVector.x = defaultUpVector.x * cosTheta + defaultUpVector.y * sinTheta;
-            currentUpVector.y = defaultUpVector.x * sinTheta - defaultUpVector.y * cosTheta;
+            currentUpVector.X = defaultUpVector.X * cosTheta + defaultUpVector.Y * sinTheta;
+            currentUpVector.Y = defaultUpVector.X * sinTheta - defaultUpVector.Y * cosTheta;
             return currentUpVector;
         }
 
@@ -226,28 +226,28 @@ namespace Game
             Vector2 upVector = CalculateUpVector(rotation);
             upVector.ScaleVector(speed);
             upVector.ScaleVector(deltaTime);
-            position.x += upVector.x;
-            position.y += upVector.y;
+            position.X += upVector.X;
+            position.Y += upVector.Y;
         }
 
         private void CheckBorders()
         {
-            if (position.x < 0)
+            if (position.X < 0)
             {
-                position.x = Program.WIDTH;
+                position.X = Program.WIDTH;
             }
-            else if (position.x > Program.WIDTH)
+            else if (position.X > Program.WIDTH)
             {
-                position.x = 0;
+                position.X = 0;
             }
 
-            if (position.y < 0)
+            if (position.Y < 0)
             {
-                position.y = Program.HEIGHT;
+                position.Y = Program.HEIGHT;
             }
-            else if (position.y > Program.HEIGHT)
+            else if (position.Y > Program.HEIGHT)
             {
-                position.y = 0;
+                position.Y = 0;
             }
         }
     }
@@ -293,8 +293,8 @@ namespace Game
             CharacterAnim selectedAnim = SelectRandomAnimation();
             currentAnimation = selectedAnim.Anim;
             characterType = selectedAnim.Type;
-            position.x = Program.random.Next(0, Program.WIDTH);
-            position.y = Program.random.Next(0, Program.HEIGHT);
+            position.X = Program.random.Next(0, Program.WIDTH);
+            position.Y = Program.random.Next(0, Program.HEIGHT);
             lifeTime = Program.random.Next(minLifeTime, maxLifeTime);
             currentTime = 0;
         }

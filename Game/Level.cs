@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Game
 {
-    public abstract class Level
+    public abstract class Level : IRecievesInput
     {
         public abstract void Input();
         public abstract void Render();

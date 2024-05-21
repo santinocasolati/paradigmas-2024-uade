@@ -11,13 +11,6 @@ namespace Game
         private Player player;
         private List<Character> characterList = new List<Character>();
 
-        public void Reset()
-        {
-            player = null;
-            characterList.Clear();
-            GameManager.Instance.Reset();
-        }
-
         public void SetPlayer(Player player)
         {
             this.player = player;
@@ -81,29 +74,15 @@ namespace Game
             }
         }
 
-        private bool IsBoxColliding(int FirstPosX, int FirstPosY,
-         int FirstRealWidth, int FirstRealHeight, int ScndPosX, int ScndPosY,
-         int ScndRealWidth, int ScndRealHeight)
-        {
-
-            float distanceX = Math.Abs(FirstPosX - ScndPosX);
-            float distanceY = Math.Abs(FirstPosY - ScndPosY);
-
-            float sumHalfWidths = FirstRealWidth / 2 + ScndRealWidth / 2;
-            float sumHalfHeights = FirstRealHeight / 2 + ScndRealHeight / 2;
-
-            return distanceX <= sumHalfWidths && distanceY <= sumHalfHeights;
-        }
-
         private bool IsBoxColliding(Vector2 posOne, Vector2 realSizeOne,
         Vector2 posTwo, Vector2 RealSizeTwo)
         {
 
-            float distanceX = Math.Abs(posOne.x - posTwo.x);
-            float distanceY = Math.Abs(posOne.y - posTwo.y);
+            float distanceX = Math.Abs(posOne.X - posTwo.X);
+            float distanceY = Math.Abs(posOne.Y - posTwo.Y);
 
-            float sumHalfWidths = realSizeOne.x / 2 + RealSizeTwo.x / 2;
-            float sumHalfHeights = realSizeOne.y / 2 + RealSizeTwo.y / 2;
+            float sumHalfWidths = realSizeOne.X / 2 + RealSizeTwo.X / 2;
+            float sumHalfHeights = realSizeOne.Y / 2 + RealSizeTwo.Y / 2;
 
             return distanceX <= sumHalfWidths && distanceY <= sumHalfHeights;
         }
