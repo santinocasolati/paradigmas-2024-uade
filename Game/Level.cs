@@ -37,8 +37,12 @@ namespace Game
 
             for (int i = 0; i < 10; i++)
             {
-                Timer t = new Timer(new Vector2(1, 1), new Vector2(200, Program.HEIGHT / 2), 5, 7);
-                gameUpdater.AddUpdatableObj(t);
+                Timer t = PickableFactory.CreatePickableObject(PickableFactory.Pickable.Timer) as Timer;
+
+                if (t != null)
+                {
+                    gameUpdater.AddUpdatableObj(t);
+                }
             }
         }
 

@@ -26,4 +26,9 @@ namespace Game
     {
         void AddAnimations();
     }
+
+    public interface IPickable
+    {
+        void Pick();
+    }
 }

@@ -252,7 +252,7 @@ namespace Game
         }
     }
 
-    public class Timer : Character
+    public class Timer : Character, IPickable
     {
         private float lifeTime;
         private int minLifeTime;
@@ -316,7 +316,7 @@ namespace Game
 
             if (otherType == characterType)
             {
-                GameManager.Instance.AddTime(5);
+                Pick();
             }
             else
             {
@@ -324,6 +324,11 @@ namespace Game
             }
 
             Generate();
+        }
+
+        private void Pick()
+        {
+            GameManager.Instance.AddTime(5);
         }
 
         public override void Update(float deltaTime)
