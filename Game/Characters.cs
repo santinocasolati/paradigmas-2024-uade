@@ -14,7 +14,7 @@ namespace Game
         Obstacle
     }
 
-    public class Character : ICollidable, IDrawable, IHasAnimations
+    public class Character : ICollidable, IDrawable, IHasAnimations, ICharacter
     {
         protected Vector2 size;
         protected Vector2 position;
@@ -323,7 +323,7 @@ namespace Game
                 GameManager.Instance.RemoveTime(5);
             }
 
-            Generate();
+            GameManager.Instance.DestroyTimer(this);
         }
 
         private void Pick()

@@ -37,13 +37,17 @@ namespace Game
 
             for (int i = 0; i < 10; i++)
             {
-                Timer t = PickableFactory.CreatePickableObject(PickableFactory.Pickable.Timer) as Timer;
-
-                if (t != null)
-                {
-                    gameUpdater.AddUpdatableObj(t);
-                }
+                Timer t = GameManager.Instance.TimerPool.GetObject();
+                gameUpdater.AddUpdatableObj(t);
             }
+        }
+
+        public void TimerDestroy(Timer t)
+        {
+            gameUpdater.RemoveUpdatableObj(t);
+
+            Timer newT = GameManager.Instance.TimerPool.GetObject();
+            gameUpdater.AddUpdatableObj(newT);
         }
 
         public override void Input()

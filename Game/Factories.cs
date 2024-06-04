@@ -1,15 +1,15 @@
 ﻿using System;
 namespace Game
 {
-    public static class PickableFactory
+    public static class CharacterFactory
     {
-        public enum Pickable { Timer };
+        public enum Characters { Timer };
 
-        public static IPickable CreatePickableObject(Pickable pickable)
+        public static ICharacter CreateCharacter(Characters character)
         {
-            switch(pickable)
+            switch(character)
             {
-                case Pickable.Timer:
+                case Characters.Timer:
                     return new Timer(new Vector2(1, 1), new Vector2(200, Program.HEIGHT / 2), 5, 7);
 
                 default:

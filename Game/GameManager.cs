@@ -15,6 +15,12 @@ namespace Game
         private readonly float startingTime = 50;
 
         private GameTimer gameTimer;
+        private ObjectPool<Timer> _timerPool = new ObjectPool<Timer>(CharacterFactory.CreateCharacter);
+
+        public ObjectPool<Timer> TimerPool
+        {
+            get { return _timerPool; }
+        }
 
         public GameManager()
         {
@@ -60,6 +66,18 @@ namespace Game
         public void DrawTimer()
         {
             gameTimer.Draw();
+        }
+
+        public void DestroyTimer(Timer t) 
+        {
+            _timerPool.ReleaseObject(t);
+
+            GameplayLevel gp = LevelManager.Instance.CurrentLevel as GameplayLevel;
+
+            if (gp != null) 
+            {
+                gp.TimerDestroy(t);
+            }
         }
     }
 }

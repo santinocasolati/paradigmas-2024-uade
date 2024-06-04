@@ -62,7 +62,8 @@
     <Compile Include="GameTimer.cs" />
     <Compile Include="GameManager.cs" />
     <Compile Include="Utils.cs" />
-    <Compile Include="CharacterFactory.cs" />
+    <Compile Include="Factories.cs" />
+    <Compile Include="Pools.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Engine.dll">
