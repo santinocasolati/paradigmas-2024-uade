@@ -284,11 +284,9 @@ namespace Game
             List<Texture> listBlue = new List<Texture>();
             listBlue.Add(Engine.GetTexture("Textures/Timer/timer_blue.png"));
             blueTimer = new CharacterAnim(CharacterType.Blue, new Animation("blueTimer", listBlue, .25f, true));
-
-            Generate();
         }
 
-        private void Generate()
+        public void Generate()
         {
             CharacterAnim selectedAnim = SelectRandomAnimation();
             currentAnimation = selectedAnim.Anim;
@@ -338,7 +336,7 @@ namespace Game
 
             if (currentTime >= lifeTime)
             {
-                Generate();
+                GameManager.Instance.DestroyTimer(this);
             }
         }
     }

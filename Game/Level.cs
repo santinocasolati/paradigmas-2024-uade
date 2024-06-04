@@ -37,17 +37,22 @@ namespace Game
 
             for (int i = 0; i < 10; i++)
             {
-                Timer t = GameManager.Instance.TimerPool.GetObject();
-                gameUpdater.AddUpdatableObj(t);
+                AddTimer();
             }
+        }
+
+        private void AddTimer()
+        {
+            Timer t = GameManager.Instance.TimerPool.GetObject();
+            t.Generate();
+            gameUpdater.AddUpdatableObj(t);
         }
 
         public void TimerDestroy(Timer t)
         {
             gameUpdater.RemoveUpdatableObj(t);
 
-            Timer newT = GameManager.Instance.TimerPool.GetObject();
-            gameUpdater.AddUpdatableObj(newT);
+            AddTimer();
         }
 
         public override void Input()
