@@ -286,7 +286,7 @@ namespace Game
             blueTimer = new CharacterAnim(CharacterType.Blue, new Animation("blueTimer", listBlue, .25f, true));
         }
 
-        public void Generate()
+        public void Reset()
         {
             CharacterAnim selectedAnim = SelectRandomAnimation();
             currentAnimation = selectedAnim.Anim;

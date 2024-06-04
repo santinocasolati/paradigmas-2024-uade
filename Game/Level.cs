@@ -44,7 +44,7 @@ namespace Game
         private void AddTimer()
         {
             Timer t = GameManager.Instance.TimerPool.GetObject();
-            t.Generate();
+            t.Reset();
             gameUpdater.AddUpdatableObj(t);
         }
 
