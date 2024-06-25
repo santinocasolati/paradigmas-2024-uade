@@ -324,7 +324,7 @@ namespace Game
             GameManager.Instance.DestroyTimer(this);
         }
 
-        private void Pick()
+        public void Pick()
         {
             GameManager.Instance.AddTime(5);
         }
