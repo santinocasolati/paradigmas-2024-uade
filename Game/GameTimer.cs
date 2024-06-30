@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Game
 {
-    public class GameTimer : IDrawable, IHasAnimations
+    public class GameTimer : IRenderer, IHasAnimations
     {
         private float currentTime;
         private float maxTime;

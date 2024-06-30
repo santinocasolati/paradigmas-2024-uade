@@ -64,6 +64,8 @@
     <Compile Include="Utils.cs" />
     <Compile Include="Factories.cs" />
     <Compile Include="Pools.cs" />
+    <Compile Include="Renderer.cs" />
+    <Compile Include="Transform.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Engine.dll">

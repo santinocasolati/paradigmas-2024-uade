@@ -14,47 +14,55 @@ namespace Game
         Obstacle
     }
 
-    public class Character : ICollidable, IDrawable, IHasAnimations, ICharacter
+    public class Character : ICollidable, IRenderer, IHasAnimations, ICharacter
     {
-        protected Vector2 size;
-        protected Vector2 position;
-        protected float rotation;
+        protected Transform transform;
+        protected Renderer renderer;
         protected CharacterType characterType;
 
-        protected Animation currentAnimation;
-
-        public Character(Vector2 size, Vector2 position)
+        public Character(Transform transform, Texture texture)
         {
-            this.size = size;
-            this.position = position;
+            this.transform = transform;
+            renderer = new Renderer(texture);
+        }
+
+        public Character(Transform transform, Animation currentAnimation)
+        {
+            this.transform = transform;
+            renderer = new Renderer(currentAnimation);
+        }
+
+        public Character(Transform transform)
+        {
+            this.transform = transform;
         }
 
         public int PosX
         {
-            get { return (int)position.X; }
+            get { return (int)transform.position.X; }
         }
         public int PosY
         {
-            get { return (int)position.Y; }
+            get { return (int)transform.position.Y; }
         }
 
         protected int RealWidth
         {
-            get { return (int)(currentAnimation.CurrentFrame.Width * size.X); }
+            get { return (int)(renderer.GetWidth * transform.scale.X); }
         }
         protected int RealHeight
         {
-            get { return (int)(currentAnimation.CurrentFrame.Height * size.Y); }
+            get { return (int)(renderer.GetHeight * transform.scale.Y); }
         }
 
         public Vector2 Position
         {
-            get { return position; }
+            get { return transform.position; }
         }
 
         public Vector2 Size
         {
-            get { return size; }
+            get { return transform.scale; }
         }
         public Vector2 RealSize
         {
@@ -72,12 +80,12 @@ namespace Game
 
         public virtual void Draw()
         {
-            Engine.Draw(currentAnimation.CurrentFrame, position.X, position.Y, size.X, size.Y, rotation, RealWidth / 2, RealHeight / 2);
+            renderer.Draw(transform);
         }
 
         public virtual void Update(float deltaTime)
         {
-            currentAnimation.Update();
+            renderer.Update();
         }
     }
 
@@ -112,11 +120,10 @@ namespace Game
         private CharacterAnim greenShip;
         private CharacterAnim blueShip;
 
-        public Player(Vector2 size, Vector2 position, float speed, float rotationSpeed) : base(size, position)
+        public Player(Transform transform, float speed, float rotationSpeed) : base(transform)
         {
-            this.rotationSpeed = rotationSpeed;
             this.speed = speed;
-
+            this.rotationSpeed = rotationSpeed;
             AddAnimations();
         }
 
@@ -144,7 +151,15 @@ namespace Game
         private void ChangeColor()
         {
             CharacterAnim selectedAnim = SelectRandomAnimation();
-            currentAnimation = selectedAnim.Anim;
+
+            if (renderer == null)
+            {
+                renderer = new Renderer(selectedAnim.Anim);
+            } else
+            {
+                renderer.ChangeAnimation(selectedAnim.Anim);
+            }
+
             characterType = selectedAnim.Type;
         }
 
@@ -198,7 +213,7 @@ namespace Game
 
         public void Input()
         {
-            float newRotation = rotation;
+            float newRotation = transform.rotation;
 
             if (Engine.GetKey(Keys.A))
             {
@@ -210,7 +225,7 @@ namespace Game
                 newRotation += rotationSpeed * Program.deltaTime;
             }
 
-            rotation = newRotation;
+            transform.rotation = newRotation;
         }
 
         public override void Update(float deltaTime)
@@ -223,31 +238,31 @@ namespace Game
 
         private void AddSpeed(float deltaTime)
         {
-            Vector2 upVector = CalculateUpVector(rotation);
+            Vector2 upVector = CalculateUpVector(transform.rotation);
             upVector.ScaleVector(speed);
             upVector.ScaleVector(deltaTime);
-            position.X += upVector.X;
-            position.Y += upVector.Y;
+            transform.position.X += upVector.X;
+            transform.position.Y += upVector.Y;
         }
 
         private void CheckBorders()
         {
-            if (position.X < 0)
+            if (transform.position.X < 0)
             {
-                position.X = Program.WIDTH;
+                transform.position.X = Program.WIDTH;
             }
-            else if (position.X > Program.WIDTH)
+            else if (transform.position.X > Program.WIDTH)
             {
-                position.X = 0;
+                transform.position.X = 0;
             }
 
-            if (position.Y < 0)
+            if (transform.position.Y < 0)
             {
-                position.Y = Program.HEIGHT;
+                transform.position.Y = Program.HEIGHT;
             }
-            else if (position.Y > Program.HEIGHT)
+            else if (transform.position.Y > Program.HEIGHT)
             {
-                position.Y = 0;
+                transform.position.Y = 0;
             }
         }
     }
@@ -263,7 +278,7 @@ namespace Game
         private CharacterAnim greenTimer;
         private CharacterAnim blueTimer;
 
-        public Timer(Vector2 size, Vector2 position, int minLifeTime, int maxLifeTime) : base(size, position)
+        public Timer(Transform transform, int minLifeTime, int maxLifeTime) : base(transform)
         {
             this.minLifeTime = minLifeTime;
             this.maxLifeTime = maxLifeTime;
@@ -289,10 +304,10 @@ namespace Game
         public void Reset()
         {
             CharacterAnim selectedAnim = SelectRandomAnimation();
-            currentAnimation = selectedAnim.Anim;
+            renderer.ChangeAnimation(selectedAnim.Anim);
             characterType = selectedAnim.Type;
-            position.X = Program.random.Next(0, Program.WIDTH);
-            position.Y = Program.random.Next(0, Program.HEIGHT);
+            transform.position.X = Program.random.Next(0, Program.WIDTH);
+            transform.position.Y = Program.random.Next(0, Program.HEIGHT);
             lifeTime = Program.random.Next(minLifeTime, maxLifeTime);
             currentTime = 0;
         }

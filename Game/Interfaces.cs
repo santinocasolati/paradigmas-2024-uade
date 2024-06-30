@@ -21,7 +21,7 @@ namespace Game
         void Collide(CharacterType otherType);
     }
 
-    public interface IDrawable
+    public interface IRenderer
     {
         void Draw();
         void Update(float deltaTime);
