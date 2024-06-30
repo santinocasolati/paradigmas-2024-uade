@@ -32,7 +32,7 @@ namespace Game
             GameManager.Instance.Reset();
             gameUpdater = new GameUpdater();
 
-            Player p = new Player(new Vector2(.5f, .5f), new Vector2(Program.WIDTH / 2, Program.HEIGHT / 2), 500, 500);
+            Player p = CharacterFactory.CreateCharacter(CharacterFactory.Characters.Player) as Player;
             gameUpdater.SetPlayer(p);
 
             for (int i = 0; i < 10; i++)

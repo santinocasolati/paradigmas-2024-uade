@@ -35,7 +35,9 @@ namespace Game
         {
             player?.Update(deltaTime);
 
-            foreach (Character character in characterList)
+            List<Character> tempList = new List<Character>(characterList);
+
+            foreach (Character character in tempList)
             {
                 character.Update(deltaTime);
             }

@@ -15,7 +15,7 @@ namespace Game
         private readonly float startingTime = 50;
 
         private GameTimer gameTimer;
-        private ObjectPool<Timer> _timerPool = new ObjectPool<Timer>(CharacterFactory.CreateCharacter);
+        private ObjectPool<Timer> _timerPool = new ObjectPool<Timer>(() => CharacterFactory.CreateCharacter(CharacterFactory.Characters.Timer) as Timer);
 
         public ObjectPool<Timer> TimerPool
         {

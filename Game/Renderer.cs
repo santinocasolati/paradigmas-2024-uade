@@ -22,6 +22,10 @@ namespace Game
             this._texture = texture;
         }
 
+        public Renderer()
+        {
+        }
+
         public int GetWidth
         {
             get
@@ -61,7 +65,7 @@ namespace Game
             {
                 try
                 {
-                    Engine.Draw(_texture, transform.Position.X, transform.Position.Y, transform.Scale.X, transform.Scale.Y, transform.Rotation.X);
+                    Engine.Draw(_texture, transform.position.X, transform.position.Y, transform.scale.X, transform.scale.Y, transform.rotation);
                 }
                 catch (Exception ex)
                 {
@@ -69,7 +73,7 @@ namespace Game
                 }
             } else
             {
-                Engine.Draw(_currentAnimation.CurrentFrame, transform.Position.X, transform.Position.Y, transform.Scale.X, transform.Scale.Y, transform.Rotation.X);
+                Engine.Draw(_currentAnimation.CurrentFrame, transform.position.X, transform.position.Y, transform.scale.X, transform.scale.Y, transform.rotation);
             }
         }
 

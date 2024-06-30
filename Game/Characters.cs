@@ -35,6 +35,7 @@ namespace Game
         public Character(Transform transform)
         {
             this.transform = transform;
+            renderer = new Renderer();
         }
 
         public int PosX

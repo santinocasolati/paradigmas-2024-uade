@@ -23,7 +23,7 @@ namespace Game
             {
                 item = _objects.Dequeue();
             } else {
-                _objectGenerator();
+                item = _objectGenerator();
             }
 
             return item;
