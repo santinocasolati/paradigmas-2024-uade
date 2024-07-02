@@ -156,7 +156,8 @@ namespace Game
             if (renderer == null)
             {
                 renderer = new Renderer(selectedAnim.Anim);
-            } else
+            }
+            else
             {
                 renderer.ChangeAnimation(selectedAnim.Anim);
             }
@@ -199,16 +200,16 @@ namespace Game
         {
             double rotationRadians = Math.PI * rotation / 180;
 
-            Vector2 defaultUpVector = new Vector2();
-            defaultUpVector.X = 0;
-            defaultUpVector.Y = 1;
+            Vector2 defaultUpVector = new Vector2(0, 1);
 
             float cosTheta = (float)Math.Cos(rotationRadians);
             float sinTheta = (float)Math.Sin(rotationRadians);
 
-            Vector2 currentUpVector = new Vector2();
-            currentUpVector.X = defaultUpVector.X * cosTheta + defaultUpVector.Y * sinTheta;
-            currentUpVector.Y = defaultUpVector.X * sinTheta - defaultUpVector.Y * cosTheta;
+            Vector2 currentUpVector = new Vector2(
+                defaultUpVector.X * cosTheta + defaultUpVector.Y * sinTheta,
+                defaultUpVector.X * sinTheta - defaultUpVector.Y * cosTheta
+            );
+
             return currentUpVector;
         }
 
@@ -242,8 +243,7 @@ namespace Game
             Vector2 upVector = CalculateUpVector(transform.rotation);
             upVector.ScaleVector(speed);
             upVector.ScaleVector(deltaTime);
-            transform.position.X += upVector.X;
-            transform.position.Y += upVector.Y;
+            transform.Move(upVector);
         }
 
         private void CheckBorders()

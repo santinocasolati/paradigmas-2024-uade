@@ -15,11 +15,16 @@ namespace Game
             _objectGenerator = objectGenerator;
         }
 
+        public int Length
+        {
+            get { return _objects.Count; }
+        }
+
         public T GetObject()
         {
             T item = default;
 
-            if (_objects.Count > 0)
+            if (Length > 0)
             {
                 item = _objects.Dequeue();
             } else {
@@ -32,6 +37,14 @@ namespace Game
         public void ReleaseObject(T obj)
         {
             _objects.Enqueue(obj);
+        }
+
+        public void ClearPool()
+        {
+            while (Length > 0)
+            {
+                _objects.Dequeue();
+            }
         }
     }
 }

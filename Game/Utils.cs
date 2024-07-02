@@ -46,5 +46,21 @@ namespace Game
             X *= scale;
             Y *= scale;
         }
+
+        public void Add(Vector2 v)
+        {
+            X += v.X;
+            Y += v.Y;
+        }
+
+        public bool Equals(Vector2 other)
+        {
+            return X == other.X && Y == other.Y;
+        }
+
+        public string VecToString()
+        {
+            return "X: " + X + ", " + Y + ")";
+        }
     }
 }
