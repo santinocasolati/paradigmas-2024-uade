@@ -14,7 +14,7 @@ namespace Game
         Obstacle
     }
 
-    public class Character : ICollidable, IRenderer, IHasAnimations, ICharacter
+    public class Character : ICollidable, IRenderer, IHasAnimations
     {
         protected Transform transform;
         protected Renderer renderer;

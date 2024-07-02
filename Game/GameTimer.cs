@@ -6,59 +6,47 @@ using System.Threading.Tasks;
 
 namespace Game
 {
-    public class GameTimer : IRenderer, IHasAnimations
+    public class GameTimer : IRenderer
     {
         private float currentTime;
         private float maxTime;
 
-        private Animation clockAnim;
-        private Animation handAnim;
-
         private float scale = .125f;
-        private float handRotation = 0;
 
-        private int RealWidthClock
-        {
-            get { return (int)(clockAnim.CurrentFrame.Width * scale); }
-        }
-        private int RealHeightClock
-        {
-            get { return (int)(clockAnim.CurrentFrame.Height * scale); }
-        }
+        private Transform clockTransform;
+        private Renderer clockRenderer;
 
-        private int RealWidthHand
-        {
-            get { return (int)(handAnim.CurrentFrame.Width * scale); }
-        }
-        private int RealHeightHand
-        {
-            get { return (int)(handAnim.CurrentFrame.Height * scale); }
-        }
+        private Transform handTransform;
+        private Renderer handRenderer;
 
         public GameTimer(float currentTime, float maxTime)
         {
             this.currentTime = currentTime;
             this.maxTime = maxTime;
 
-            AddAnimations();
+            clockTransform = new Transform();
+            clockTransform.position = new Vector2(50, 50);
+            clockTransform.scale.X = scale;
+            clockTransform.scale.Y = scale;
+            clockRenderer = new Renderer(Engine.GetTexture("Textures/Clock/clock.png"));
+
+            handTransform = new Transform();
+            handTransform.position = new Vector2(50, 50);
+            handTransform.scale.X = scale;
+            handTransform.scale.Y = scale;
+            handRenderer = new Renderer(Engine.GetTexture("Textures/Clock/clock_hand.png"));
         }
 
         public float CurrentTime { get { return currentTime; } }
 
-        public void AddAnimations()
-        {
-            List<Texture> listClock = new List<Texture>();
-            listClock.Add(Engine.GetTexture("Textures/Clock/clock.png"));
-            clockAnim = new Animation("clock", listClock, 1, false);
-
-            List<Texture> listHand = new List<Texture>();
-            listHand.Add(Engine.GetTexture("Textures/Clock/clock_hand.png"));
-            handAnim = new Animation("clockHand", listHand, 1, false);
-        }
-
         public void AddTime(float timeToAdd)
         {
             currentTime += timeToAdd;
+
+            if (currentTime >= maxTime)
+            {
+                GameManager.Instance.OnGameWin?.Invoke();
+            }
         }
 
         public void SetTime(float currentTime, float maxTime)
@@ -76,17 +64,22 @@ namespace Game
         {
             currentTime -= deltaTime;
             InterpolateTime();
+
+            if (currentTime <= 0)
+            {
+                GameManager.Instance.OnGameLost?.Invoke();
+            }
         }
 
         private void InterpolateTime()
         {
-            handRotation = (currentTime / maxTime) * 360;
+            handTransform.rotation = (currentTime / maxTime) * 360;
         }
 
         public void Draw()
         {
-            Engine.Draw(clockAnim.CurrentFrame, 50, 50, scale, scale, 0, RealWidthClock / 2, RealHeightClock / 2);
-            Engine.Draw(handAnim.CurrentFrame, 50, 50, scale, scale, handRotation, RealWidthHand / 2, RealHeightHand / 2);
+            clockRenderer.Draw(clockTransform);
+            handRenderer.Draw(handTransform);
         }
     }
 }

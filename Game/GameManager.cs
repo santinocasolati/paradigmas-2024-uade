@@ -17,6 +17,9 @@ namespace Game
         private GameTimer gameTimer;
         private ObjectPool<Timer> _timerPool = new ObjectPool<Timer>(() => CharacterFactory.CreateCharacter(CharacterFactory.Characters.Timer) as Timer);
 
+        public Action OnGameLost;
+        public Action OnGameWin;
+
         public ObjectPool<Timer> TimerPool
         {
             get { return _timerPool; }
@@ -25,6 +28,19 @@ namespace Game
         public GameManager()
         {
             gameTimer = new GameTimer(startingTime, timeToWin);
+
+            OnGameLost += HandleGameLost;
+            OnGameWin += HandleGameWin;
+        }
+
+        private void HandleGameWin()
+        {
+            LevelManager.Instance.SetLevel(LevelType.Win);
+        }
+
+        private void HandleGameLost()
+        {
+            LevelManager.Instance.SetLevel(LevelType.Lose);
         }
 
         public static GameManager Instance
@@ -53,14 +69,6 @@ namespace Game
         public void UpdateTimer(float deltaTime)
         {
             gameTimer.Update(deltaTime);
-
-            if (gameTimer.CurrentTime <= timeToLose)
-            {
-                LevelManager.Instance.SetLevel(LevelType.Lose);
-            } else if (gameTimer.CurrentTime >= timeToWin)
-            {
-                LevelManager.Instance.SetLevel(LevelType.Win);
-            }
         }
 
         public void DrawTimer()

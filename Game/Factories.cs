@@ -5,7 +5,7 @@ namespace Game
     {
         public enum Characters { Timer, Player };
 
-        public static ICharacter CreateCharacter(Characters character)
+        public static Character CreateCharacter(Characters character)
         {
             switch (character)
             {

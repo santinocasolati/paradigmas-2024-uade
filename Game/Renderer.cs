@@ -65,7 +65,7 @@ namespace Game
             {
                 try
                 {
-                    Engine.Draw(_texture, transform.position.X, transform.position.Y, transform.scale.X, transform.scale.Y, transform.rotation);
+                    Engine.Draw(_texture, transform.position.X, transform.position.Y, transform.scale.X, transform.scale.Y, transform.rotation, GetWidth * transform.scale.X / 2, GetHeight * transform.scale.Y / 2);
                 }
                 catch (Exception ex)
                 {
@@ -73,7 +73,7 @@ namespace Game
                 }
             } else
             {
-                Engine.Draw(_currentAnimation.CurrentFrame, transform.position.X, transform.position.Y, transform.scale.X, transform.scale.Y, transform.rotation);
+                Engine.Draw(_currentAnimation.CurrentFrame, transform.position.X, transform.position.Y, transform.scale.X, transform.scale.Y, transform.rotation, GetHeight * transform.scale.Y / 2);
             }
         }
 
