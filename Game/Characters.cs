@@ -331,13 +331,8 @@ namespace Game
             if (otherType == characterType)
             {
                 Pick();
+                GameManager.Instance.DestroyItem(this);
             }
-            else
-            {
-                GameManager.Instance.RemoveTime(5);
-            }
-
-            GameManager.Instance.DestroyTimer(this);
         }
 
         public void Pick()
@@ -352,7 +347,65 @@ namespace Game
 
             if (currentTime >= lifeTime)
             {
-                GameManager.Instance.DestroyTimer(this);
+                GameManager.Instance.DestroyItem(this);
+            }
+        }
+    }
+
+    public class Laser : Character
+    {
+        private float speed;
+        private int direction;
+
+        public Laser(Transform transform, float speed) : base(transform)
+        {
+            this.speed = speed;
+            AddAnimations();
+        }
+
+        public override void AddAnimations()
+        {
+            List<Texture> textures = new List<Texture>();
+
+            for (int i = 0; i < 6; i++)
+            {
+                textures.Add(Engine.GetTexture($"Textures/Laser/0{i + 1}.png"));
+            }
+
+            Animation anim = new Animation("laserAnimation", textures, .1f, true);
+            renderer.ChangeAnimation(anim);
+        }
+
+        public void Reset()
+        {
+            direction = new Random().Next(0, 2) == 0 ? -1 : 1;
+
+            float posX = direction == 1 ? 0 : Program.WIDTH;
+            float posY = (float)(new Random().NextDouble() * Program.HEIGHT);
+
+            transform.position = new Vector2(posX, posY);
+        }
+
+        public override void Collide(CharacterType otherType)
+        {
+            base.Collide(otherType);
+
+            GameManager.Instance.RemoveTime(5);
+            GameManager.Instance.DestroyItem(this);
+        }
+
+        public override void Update(float deltaTime)
+        {
+            base.Update(deltaTime);
+
+            transform.position.X += speed * direction * deltaTime;
+
+            if (
+                (direction == 1 && transform.position.X > Program.WIDTH) ||
+                (direction == -1 && transform.position.X < 0)
+                )
+            {
+                GameManager.Instance.DestroyItem(this);
             }
         }
     }

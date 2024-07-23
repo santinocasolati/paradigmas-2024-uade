@@ -22,6 +22,9 @@ namespace Game
     {
         private GameUpdater gameUpdater;
 
+        private float _currentTime = 0;
+        private float _laserTimer = 2f;
+
         public GameplayLevel()
         {
             CreateLevel();
@@ -48,11 +51,21 @@ namespace Game
             gameUpdater.AddUpdatableObj(t);
         }
 
-        public void TimerDestroy(Timer t)
+        private void AddLaser()
+        {
+            Laser l = GameManager.Instance.LaserPool.GetObject();
+            l.Reset();
+            gameUpdater.AddUpdatableObj(l);
+        }
+
+        public void ItemDestroy(Character t)
         {
             gameUpdater.RemoveUpdatableObj(t);
 
-            AddTimer();
+            if (t as Timer != null)
+            {
+                AddTimer();
+            }
         }
 
         public override void Input()
@@ -69,6 +82,14 @@ namespace Game
         public override void Update(float deltaTime)
         {
             gameUpdater.Update(deltaTime);
+
+            _currentTime += deltaTime;
+
+            if (_currentTime >= _laserTimer)
+            {
+                AddLaser();
+                _currentTime = 0;
+            }
         }
     }
 

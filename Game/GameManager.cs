@@ -16,6 +16,7 @@ namespace Game
 
         private GameTimer gameTimer;
         private ObjectPool<Timer> _timerPool = new ObjectPool<Timer>(() => CharacterFactory.CreateCharacter(CharacterFactory.Characters.Timer) as Timer);
+        private ObjectPool<Laser> _laserPool = new ObjectPool<Laser>(() => CharacterFactory.CreateCharacter(CharacterFactory.Characters.Laser) as Laser);
 
         public Action OnGameLost;
         public Action OnGameWin;
@@ -23,6 +24,11 @@ namespace Game
         public ObjectPool<Timer> TimerPool
         {
             get { return _timerPool; }
+        }
+
+        public ObjectPool<Laser> LaserPool
+        {
+            get { return _laserPool; }
         }
 
         public GameManager()
@@ -76,15 +82,21 @@ namespace Game
             gameTimer.Draw();
         }
 
-        public void DestroyTimer(Timer t) 
+        public void DestroyItem(Character t) 
         {
-            _timerPool.ReleaseObject(t);
+            if (t as Timer != null)
+            {
+                _timerPool.ReleaseObject(t as Timer);
+            } else
+            {
+                _laserPool.ReleaseObject(t as Laser);
+            }
 
             GameplayLevel gp = LevelManager.Instance.CurrentLevel as GameplayLevel;
 
             if (gp != null) 
             {
-                gp.TimerDestroy(t);
+                gp.ItemDestroy(t);
             }
         }
     }
